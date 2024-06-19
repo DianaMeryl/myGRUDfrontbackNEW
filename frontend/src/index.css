@@ -1,0 +1,24 @@
+.customtable {
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background-color: #faf0e6 ;
+  font-size: 30px;
+  color: #191970;
+  border-collapse: collapse; 
+}
+
+.customtable th,
+.customtable td {
+  border: 4px solid #008b8b; 
+  text-align: center; 
+  padding: 8px;
+}
+
+.custom-input {
+  font-size: 25px;
+}
+.custom-input::placeholder {
+  color: #d8bfd8; 
+  opacity: 1; 
+}
