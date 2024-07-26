@@ -1,0 +1,46 @@
+
+services:
+  web:
+    depends_on:
+      - api
+    build:
+      ./frontend
+    ports: 
+      - "5173:5173"
+    environment: 
+      - PORT=5173
+    volumes: 
+      - ./frontend/src:/usr/src/app/src
+  api:
+    depends_on:
+      - mysql_db
+    build:
+      ./backend
+    ports: 
+      - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3307
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - DB_NAME=mydatabase
+    volumes: 
+      - ./backend/src:/usr/src/app/src
+    networks:
+      - my-network
+  mysql_db:
+    image: mysql:latest
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
+    networks:
+      - my-network
+networks:
+  my-network:
+    driver: bridge
+
+
