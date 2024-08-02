@@ -1,5 +1,19 @@
 
 services:
+  mysql_db:
+    image: mysql:latest
+    ports:
+      - "3307:3306"
+    env_file:
+      - ./backend/.env
+    networks:
+      - my-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1111111"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
   web:
     depends_on:
       - api
@@ -13,34 +27,19 @@ services:
       - ./frontend/src:/usr/src/app/src
   api:
     depends_on:
-      - mysql_db
+      mysql_db:
+        condition: service_healthy
     build:
       ./backend
     ports: 
       - "3000:3000"
-    environment:
-      - DB_HOST=db
-      - DB_PORT=3307
-      - DB_USER=root
-      - DB_PASSWORD=rootpassword
-      - DB_NAME=mydatabase
+    env_file:
+      - ./backend/.env
     volumes: 
       - ./backend/src:/usr/src/app/src
     networks:
       - my-network
-  mysql_db:
-    image: mysql:latest
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: root
-      MYSQL_PASSWORD: rootpassword
-    networks:
-      - my-network
+
 networks:
   my-network:
     driver: bridge
-
-
